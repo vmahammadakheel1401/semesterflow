@@ -77,10 +77,25 @@ export interface DailyTask {
   startTime: string; // "18:00"
   endTime: string; // "18:45"
   durationMinutes: number;
+  actualMinutes?: number; // Actual time spent in minutes
   category: TaskCategory;
   goalId?: string;
   notes?: string;
   completed: boolean;
+}
+
+export interface FreeTimeAllocation {
+  id: string;
+  title: string; // e.g. "GATE Preparation", "Placement Practice", "Competitive Programming", "System Design"
+  activityCategory: 'GATE' | 'Placement' | 'DSA' | 'Project' | 'Core Studies' | 'Skill Learning' | 'Personal' | 'Other' | string;
+  date: string; // YYYY-MM-DD
+  startTime: string; // "14:00"
+  endTime: string; // "16:00"
+  plannedMinutes: number; // e.g. 120
+  actualMinutes?: number; // e.g. 150
+  color?: string; // Hex or tailwind color
+  notes?: string;
+  completed?: boolean;
 }
 
 export interface SemesterInfo {

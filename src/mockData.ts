@@ -5,6 +5,7 @@ import {
   Goal,
   WeeklyTarget,
   DailyTask,
+  FreeTimeAllocation,
   SemesterInfo,
   UserProfile,
 } from './types';
@@ -248,6 +249,7 @@ export const INITIAL_DAILY_TASKS: DailyTask[] = [
     goalId: 'g-1',
     notes: 'Solve 15 GATE questions on Eigenvalues & Cayley-Hamilton theorem.',
     completed: true,
+    actualMinutes: 75,
   },
   {
     id: 'dt-6',
@@ -256,10 +258,11 @@ export const INITIAL_DAILY_TASKS: DailyTask[] = [
     startTime: '14:00',
     endTime: '15:15',
     durationMinutes: 75,
+    actualMinutes: 60,
     category: 'COA',
     goalId: 'g-1',
     notes: 'Structural, data, and control hazard branch prediction analysis.',
-    completed: false,
+    completed: true,
   },
   {
     id: 'dt-7',
@@ -268,6 +271,7 @@ export const INITIAL_DAILY_TASKS: DailyTask[] = [
     startTime: '16:00',
     endTime: '17:30',
     durationMinutes: 90,
+    actualMinutes: 90,
     category: 'Placement',
     goalId: 'g-2',
     notes: 'Solve LeetCode #102, #104, #236 (LCA in Tree).',
@@ -294,6 +298,48 @@ export const INITIAL_DAILY_TASKS: DailyTask[] = [
     category: 'GATE',
     goalId: 'g-1',
     notes: 'Consolidate week 5 formulas into physical engineering log.',
+    completed: false,
+  },
+];
+
+export const INITIAL_FREE_TIME_ALLOCATIONS: FreeTimeAllocation[] = [
+  {
+    id: 'fta-1',
+    title: 'GATE Preparation (COA & Discrete Math)',
+    activityCategory: 'GATE',
+    date: '2026-09-19',
+    startTime: '10:00',
+    endTime: '12:30',
+    plannedMinutes: 150,
+    actualMinutes: 150,
+    color: '#4f46e5', // indigo
+    notes: 'Solve PYQs and revise memory hierarchy formulas.',
+    completed: true,
+  },
+  {
+    id: 'fta-2',
+    title: 'Placement Practice (Mock Tests & Core CS)',
+    activityCategory: 'Placement',
+    date: '2026-09-19',
+    startTime: '15:30',
+    endTime: '17:00',
+    plannedMinutes: 90,
+    actualMinutes: 90,
+    color: '#0891b2', // cyan
+    notes: 'Online assessment simulation & timed problem solving.',
+    completed: true,
+  },
+  {
+    id: 'fta-3',
+    title: 'Distributed System Project Sprint',
+    activityCategory: 'Project',
+    date: '2026-09-19',
+    startTime: '20:00',
+    endTime: '21:15',
+    plannedMinutes: 75,
+    actualMinutes: 45,
+    color: '#059669', // emerald
+    notes: 'Raft consensus heartbeat RPC implementation.',
     completed: false,
   },
 ];

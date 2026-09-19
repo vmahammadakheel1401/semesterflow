@@ -7,6 +7,7 @@ import {
   Goal,
   WeeklyTarget,
   DailyTask,
+  FreeTimeAllocation,
   SemesterInfo,
   UserProfile,
   EventType,
@@ -19,6 +20,7 @@ import {
   INITIAL_GOALS,
   INITIAL_WEEKLY_TARGETS,
   INITIAL_DAILY_TASKS,
+  INITIAL_FREE_TIME_ALLOCATIONS,
   INITIAL_CALENDAR_EVENTS,
 } from '../mockData';
 
@@ -92,6 +94,15 @@ interface SemesterContextType {
   deleteTask: (id: string) => void;
   toggleTaskComplete: (id: string) => void;
   moveTaskTime: (id: string, startTime: string, endTime: string, date?: string) => void;
+
+  freeTimeAllocations: FreeTimeAllocation[];
+  addFreeTimeAllocation: (allocation: Omit<FreeTimeAllocation, 'id'>) => void;
+  updateFreeTimeAllocation: (allocation: FreeTimeAllocation) => void;
+  deleteFreeTimeAllocation: (id: string) => void;
+  toggleFreeTimeComplete: (id: string) => void;
+  logTaskActualTime: (taskId: string, actualMinutes: number) => void;
+  logAllocationActualTime: (allocationId: string, actualMinutes: number) => void;
+  getFreeTimeAllocationsForDate: (dateString: string) => FreeTimeAllocation[];
 
   // Reusable modal for Screen 11
   modalConfig: ModalConfig;
@@ -207,6 +218,11 @@ export const SemesterProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return saved ? JSON.parse(saved) : INITIAL_DAILY_TASKS;
   });
 
+  const [freeTimeAllocations, setFreeTimeAllocations] = useState<FreeTimeAllocation[]>(() => {
+    const saved = localStorage.getItem(STORAGE_PREFIX + 'free_time_allocations');
+    return saved ? JSON.parse(saved) : INITIAL_FREE_TIME_ALLOCATIONS;
+  });
+
   // Modal configuration state
   const [modalConfig, setModalConfig] = useState<ModalConfig>({
     isOpen: false,
@@ -246,6 +262,10 @@ export const SemesterProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     localStorage.setItem(STORAGE_PREFIX + 'daily_tasks', JSON.stringify(dailyTasks));
   }, [dailyTasks]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_PREFIX + 'free_time_allocations', JSON.stringify(freeTimeAllocations));
+  }, [freeTimeAllocations]);
 
   // Operations
   const updateUserProfile = (profile: Partial<UserProfile>) => {
@@ -426,6 +446,48 @@ export const SemesterProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     );
   };
 
+  const logTaskActualTime = (taskId: string, actualMinutes: number) => {
+    setDailyTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, actualMinutes } : t))
+    );
+  };
+
+  const addFreeTimeAllocation = (allocation: Omit<FreeTimeAllocation, 'id'>) => {
+    const newAllocation: FreeTimeAllocation = {
+      ...allocation,
+      id: 'fta-' + Date.now(),
+    };
+    setFreeTimeAllocations((prev) => [...prev, newAllocation]);
+  };
+
+  const updateFreeTimeAllocation = (allocation: FreeTimeAllocation) => {
+    setFreeTimeAllocations((prev) =>
+      prev.map((a) => (a.id === allocation.id ? allocation : a))
+    );
+  };
+
+  const deleteFreeTimeAllocation = (id: string) => {
+    setFreeTimeAllocations((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const toggleFreeTimeComplete = (id: string) => {
+    setFreeTimeAllocations((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, completed: !a.completed } : a))
+    );
+  };
+
+  const logAllocationActualTime = (allocationId: string, actualMinutes: number) => {
+    setFreeTimeAllocations((prev) =>
+      prev.map((a) => (a.id === allocationId ? { ...a, actualMinutes } : a))
+    );
+  };
+
+  const getFreeTimeAllocationsForDate = (dateString: string): FreeTimeAllocation[] => {
+    return freeTimeAllocations
+      .filter((a) => a.date === dateString)
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
+  };
+
   const moveTaskTime = (id: string, startTime: string, endTime: string, date?: string) => {
     setDailyTasks((prev) =>
       prev.map((t) =>
@@ -568,6 +630,7 @@ export const SemesterProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setGoals(INITIAL_GOALS);
     setWeeklyTargets(INITIAL_WEEKLY_TARGETS);
     setDailyTasks(INITIAL_DAILY_TASKS);
+    setFreeTimeAllocations(INITIAL_FREE_TIME_ALLOCATIONS);
     setSelectedDate(getTodayDateString());
     setActiveScreen('today');
   };
@@ -618,6 +681,14 @@ export const SemesterProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         deleteTask,
         toggleTaskComplete,
         moveTaskTime,
+        freeTimeAllocations,
+        addFreeTimeAllocation,
+        updateFreeTimeAllocation,
+        deleteFreeTimeAllocation,
+        toggleFreeTimeComplete,
+        logTaskActualTime,
+        logAllocationActualTime,
+        getFreeTimeAllocationsForDate,
         modalConfig,
         openModal,
         closeModal,
