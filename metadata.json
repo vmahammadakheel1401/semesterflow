@@ -1,0 +1,7 @@
+{
+  "name": "SemesterFlow",
+  "description": "Plan your semester around college, goals, and real life — semester planning system for engineering college students.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
